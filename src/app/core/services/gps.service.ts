@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable, Subject, from, fromEventPattern } from 'rxjs';
-import { filter, map, shareReplay, takeUntil } from 'rxjs/operators';
+import { Observable, Subject, } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import { Geolocation, Position } from '@capacitor/geolocation';
 import { GpsPoint } from 'src/app/shared/interfaces/gpsPoint.interface';
 
@@ -71,6 +71,7 @@ export class GpsService implements OnDestroy {
       return false;
     }
   }
+
   async getCurrentPosition(): Promise<GpsPoint | null> {
     try {
       const pos = await Geolocation.getCurrentPosition({
