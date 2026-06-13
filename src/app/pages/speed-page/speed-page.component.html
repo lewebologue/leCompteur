@@ -3,8 +3,6 @@
 
   @if (s) {
     <div class="speedometer" [class.is-running]="s.state === 'running'" [class.is-paused]="s.state === 'paused'">
-
-      <!-- ── En-tête ──────────────────────────────────────────────────── -->
       <header class="sp-header">
         <span class="sp-app-name">Le Compteur</span>
         <div class="sp-signal" [class.lost]="s.signalLost" [class.active]="s.state === 'running'">

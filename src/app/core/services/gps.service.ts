@@ -18,6 +18,7 @@ export class GpsService implements OnDestroy {
         if (status.location !== 'granted') {
           return Geolocation.requestPermissions();
         }
+        return status
       })
       .then(() => {
         Geolocation.watchPosition(
