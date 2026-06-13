@@ -10,9 +10,11 @@
       },
       "extends": [
         "plugin:@angular-eslint/recommended",
-        "plugin:@angular-eslint/template/process-inline-templates"
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "plugin:prettier/recommended"
       ],
       "rules": {
+        "prettier/prettier": "error",
         "@angular-eslint/component-class-suffix": [
           "error",
           {
