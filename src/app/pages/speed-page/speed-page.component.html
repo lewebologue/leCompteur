@@ -1,3 +1,101 @@
-<p>
-  speed-page works!
-</p>
+<ion-content [fullscreen]="true">
+  @let s = stats();
+
+  @if (s) {
+    <div class="speedometer" [class.is-running]="s.state === 'running'" [class.is-paused]="s.state === 'paused'">
+
+      <!-- ── En-tête ──────────────────────────────────────────────────── -->
+      <header class="sp-header">
+        <span class="sp-app-name">Le Compteur</span>
+        <div class="sp-signal" [class.lost]="s.signalLost" [class.active]="s.state === 'running'">
+          <div class="sp-signal-dot"></div>
+          <span class="sp-signal-label">
+            {{ s.signalLost ? 'SIGNAL PERDU' : s.accuracy > 0 ? '±' + s.accuracy.toFixed(0) + ' m' : 'GPS' }}
+          </span>
+        </div>
+      </header>
+
+      <div class="sp-gauge-wrap">
+        <svg class="sp-gauge-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle
+            class="sp-arc-track"
+            cx="100" cy="100" [attr.r]="R"
+            fill="none"
+            stroke="#141C2E"
+            stroke-width="8"
+            stroke-linecap="round"
+            [attr.stroke-dasharray]="TRACK_DASHARRAY"
+            transform="rotate(135, 100, 100)"
+          />
+          <circle
+            class="sp-arc-progress"
+            cx="100" cy="100" [attr.r]="R"
+            fill="none"
+            [attr.stroke]="arcColor(s.speedKmh)"
+            stroke-width="8"
+            stroke-linecap="round"
+            [attr.stroke-dasharray]="progressDasharray(s.speedKmh, s.maxSpeedKmh)"
+            transform="rotate(135, 100, 100)"
+          />
+        </svg>
+        <div class="sp-speed-display">
+          <span class="sp-speed-value" [class.signal-lost]="s.signalLost">
+            {{ s.speedKmh | number:'1.0-1' }}
+          </span>
+          <span class="sp-speed-unit">km/h</span>
+        </div>
+      </div>
+      <div class="sp-stats">
+        <div class="sp-stat">
+          <span class="sp-stat-value">{{ s.avgSpeedKmh | number:'1.0-1' }}</span>
+          <span class="sp-stat-label">MOY km/h</span>
+        </div>
+        <div class="sp-stat sp-stat--center">
+          <span class="sp-stat-value">{{ formatDistance(s.distanceMeters) }}</span>
+          <span class="sp-stat-label">DISTANCE</span>
+        </div>
+        <div class="sp-stat">
+          <span class="sp-stat-value">{{ s.maxSpeedKmh | number:'1.0-1' }}</span>
+          <span class="sp-stat-label">MAX km/h</span>
+        </div>
+      </div>
+      <div class="sp-timer" [class.active]="s.state === 'running'">
+        {{ formatTime(s.elapsedSeconds) }}
+      </div>
+      <div class="sp-controls">
+        @switch (s.state) {
+          @case ('idle') {
+            <button class="sp-btn sp-btn--start" (click)="start()">
+              <svg class="sp-btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              DÉMARRER
+            </button>
+          }
+          @case ('running') {
+            <div class="sp-btn-row">
+              <button class="sp-btn sp-btn--pause" (click)="pause()">
+                <svg class="sp-btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6zm8-14v14h4V5z"/></svg>
+                PAUSE
+              </button>
+              <button class="sp-btn sp-btn--stop" (click)="stop()">
+                <svg class="sp-btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h12v12H6z"/></svg>
+                ARRÊT
+              </button>
+            </div>
+          }
+          @case ('paused') {
+            <div class="sp-btn-row">
+              <button class="sp-btn sp-btn--start" (click)="resume()">
+                <svg class="sp-btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                REPRENDRE
+              </button>
+              <button class="sp-btn sp-btn--stop" (click)="stop()">
+                <svg class="sp-btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h12v12H6z"/></svg>
+                ARRÊT
+              </button>
+            </div>
+          }
+        }
+      </div>
+    </div>
+  }
+</ion-content>
